@@ -3,23 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vishwakarma Engineering Work</title>
+<title>Vishwakarma Engineering Works</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;500&display=swap');
-
+  @import url('https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;500;600&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --gear-gold: #f0a500;
-    --spark: #ff6b1a;
-    --blue: #2563eb;
-    --green: #25d366;
-    --red: #ff0000;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --border: rgba(240,165,0,0.18);
+    --bg:     #0d0d0d;
+    --card:   #161616;
+    --gold:   #e8a100;
+    --text:   #f0ede8;
+    --muted:  #777;
+    --border: rgba(232,161,0,0.18);
+    --green:  #25d366;
+    --red:    #ff0000;
+    --blue:   #1877f2;
   }
 
   body {
@@ -31,235 +29,536 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px;
-    position: relative;
+    padding: 24px 16px 40px;
     overflow-x: hidden;
   }
 
-  /* Gear background decoration */
-  body::before {
-    content: '';
-    position: fixed;
-    top: -120px; right: -120px;
-    width: 420px; height: 420px;
-    background: radial-gradient(circle, rgba(240,165,0,0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+  /* Spinning gear bg */
+  .gear-bg {
+    position: fixed; inset: 0; pointer-events: none; overflow: hidden;
   }
-  body::after {
-    content: '';
-    position: fixed;
-    bottom: -100px; left: -100px;
-    width: 340px; height: 340px;
-    background: radial-gradient(circle, rgba(37,99,235,0.09) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+  .gear-bg svg {
+    position: absolute; opacity: 0.035;
+    animation: spin 36s linear infinite;
+  }
+  .gear-bg svg:nth-child(2) {
+    animation-direction: reverse; animation-duration: 24s;
+    width: 260px; bottom: -60px; left: -50px; top: auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── SCREEN SYSTEM ── */
+  .screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
+  .screen.active { display: flex; }
+
+  /* ── SCREEN 1: Form ── */
+  .logo {
+    font-family: 'Teko', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(232,161,0,0.08);
+    border: 1px solid rgba(232,161,0,0.2);
+    border-radius: 20px;
+    padding: 5px 16px;
+    margin-bottom: 20px;
   }
 
-  .card {
-    background: var(--surface);
+  .form-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 0.95;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .form-title em { font-style: normal; color: var(--gold); }
+
+  .form-sub {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 1.5;
+    max-width: 280px;
+  }
+
+  .form-card {
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 36px 28px 32px;
-    max-width: 420px;
+    padding: 24px 20px;
     width: 100%;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 16px;
   }
 
-  .gear-icon {
-    font-size: 52px;
-    line-height: 1;
-    margin-bottom: 6px;
+  .field label {
     display: block;
-    animation: spin-slow 12s linear infinite;
-  }
-  @keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  h1 {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--gear-gold);
-    letter-spacing: 0.5px;
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-  .tagline {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 28px;
+    margin-bottom: 7px;
   }
 
-  .divider {
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-size: 15px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus {
+    border-color: var(--gold);
+    background: rgba(232,161,0,0.05);
+  }
+  .field input::placeholder { color: #444; }
+
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #b87d00, #e8a100);
+    color: #0d0d0d;
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     border: none;
-    border-top: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .submit-btn:hover  { opacity: 0.9; transform: translateY(-1px); }
+  .submit-btn:active { transform: scale(0.97); }
+
+  .privacy-note {
+    font-size: 11px;
+    color: #444;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ── SCREEN 2: Loading / Auto-opening ── */
+  .loading-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .loading-sub {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  /* Step cards */
+  .step-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin-bottom: 24px;
   }
 
-  .prompt {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
-  .prompt strong { color: var(--text); }
-
-  .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .btn {
+  .step-item {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 20px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.15s, opacity 0.15s;
-    position: relative;
-    overflow: hidden;
+    transition: border-color 0.3s, background 0.3s;
   }
-  .btn:active { transform: scale(0.97); }
-  .btn::after {
-    content: '→';
-    position: absolute;
-    right: 18px;
-    font-size: 16px;
-    opacity: 0.6;
+  .step-item.done {
+    border-color: rgba(232,161,0,0.3);
+    background: rgba(232,161,0,0.05);
+  }
+  .step-item.active-now {
+    border-color: rgba(232,161,0,0.5);
+    background: rgba(232,161,0,0.08);
   }
 
-  .btn-yt   { background: linear-gradient(135deg, #c4000a 0%, #ff0000 100%); }
-  .btn-fb   { background: linear-gradient(135deg, #1a3a70 0%, #1877f2 100%); }
-  .btn-wa   { background: linear-gradient(135deg, #128c2d 0%, #25d366 100%); }
-
-  .btn-icon {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .btn-label { text-align: left; }
-  .btn-label span {
-    display: block;
-    font-size: 11px;
-    opacity: 0.75;
-    font-weight: 400;
-  }
-
-  /* Auto-open section */
-  .auto-note {
-    background: rgba(240,165,0,0.07);
-    border: 1px solid rgba(240,165,0,0.2);
+  .step-dot {
+    width: 38px; height: 38px;
     border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 12.5px;
-    color: var(--muted);
-    line-height: 1.6;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
   }
-  .auto-note strong { color: var(--gear-gold); }
+  .s-yt { background: rgba(255,0,0,0.14); color: var(--red); }
+  .s-fb { background: rgba(24,119,242,0.14); color: var(--blue); }
+  .s-wa { background: rgba(37,211,102,0.14); color: var(--green); }
 
-  /* QR section */
-  .qr-section {
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
+  .step-info { flex: 1; }
+  .step-info strong { font-size: 14px; font-weight: 600; display: block; }
+  .step-info span { font-size: 11.5px; color: var(--muted); }
+
+  .step-status {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
   }
-  .qr-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--gear-gold);
-    margin-bottom: 12px;
+  .status-wait   { color: #333; }
+  .status-active { color: var(--gold); animation: pulse 0.8s ease infinite alternate; }
+  .status-done   { color: var(--gold); }
+  @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+
+  /* Progress bar */
+  .progress-wrap {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    height: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
   }
-  #qrcode {
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #b87d00, #e8a100);
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.6s ease;
+  }
+
+  /* Manual fallback links */
+  .manual-links {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
   }
-  #qrcode canvas, #qrcode img {
-    border-radius: 12px;
-    border: 3px solid var(--gear-gold);
-    padding: 6px;
-    background: #fff;
-  }
-  .qr-hint {
-    margin-top: 10px;
-    font-size: 11.5px;
-    color: var(--muted);
-  }
-
-  .done-badge {
-    display: none;
+  .manual-link {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    background: rgba(37,211,102,0.12);
-    border: 1px solid rgba(37,211,102,0.3);
-    color: var(--green);
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 11px;
+    text-decoration: none;
     font-size: 13px;
     font-weight: 500;
-    margin-top: 10px;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: opacity 0.15s, transform 0.15s;
   }
-  .done-badge.show { display: flex; }
+  .manual-link:hover { opacity: 0.85; transform: translateY(-1px); }
+  .ml-yt { background: rgba(255,0,0,0.12); }
+  .ml-fb { background: rgba(24,119,242,0.12); }
+  .ml-wa { background: rgba(37,211,102,0.12); }
+
+  .manual-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  /* ── SCREEN 3: Done ── */
+  .done-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+    animation: bounceIn 0.5s ease;
+  }
+  @keyframes bounceIn {
+    0%   { transform: scale(0.4); opacity: 0; }
+    70%  { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .done-title {
+    font-family: 'Teko', sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .done-sub {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+  .done-checklist {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .check-row {
+    display: flex; align-items: center; gap: 10px; font-size: 13.5px;
+  }
+  .check-row .ck { color: var(--gold); font-size: 16px; }
+
+  .back-btn {
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 4px;
+  }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <span class="gear-icon">⚙️</span>
-  <h1>Vishwakarma Engineering Work</h1>
-  <p class="tagline">Engineering Solutions · Tools · Tutorials</p>
-  <hr class="divider">
+<!-- Gear background -->
+<div class="gear-bg">
+  <svg width="480" style="top:-80px;right:-100px;" viewBox="0 0 100 100" fill="#e8a100">
+    <path d="M43.3 5.8l-3.1 8.3a33 33 0 0 0-8.5 3.5L23 14.4l-9.2 9.2 3.2 8.7a33 33 0 0 0-3.5 8.5L5.8 43.3v13l8.3 3.1a33 33 0 0 0 3.5 8.5L14.4 76l9.2 9.2 8.7-3.2a33 33 0 0 0 8.5 3.5l3.1 8.3h13l3.1-8.3a33 33 0 0 0 8.5-3.5l8.7 3.2 9.2-9.2-3.2-8.7a33 33 0 0 0 3.5-8.5l8.3-3.1v-13l-8.3-3.1a33 33 0 0 0-3.5-8.5l3.2-8.7-9.2-9.2-8.7 3.2a33 33 0 0 0-8.5-3.5L56.7 5.8h-13z"/>
+  </svg>
+  <svg viewBox="0 0 100 100" fill="#e8a100">
+    <path d="M43.3 5.8l-3.1 8.3a33 33 0 0 0-8.5 3.5L23 14.4l-9.2 9.2 3.2 8.7a33 33 0 0 0-3.5 8.5L5.8 43.3v13l8.3 3.1a33 33 0 0 0 3.5 8.5L14.4 76l9.2 9.2 8.7-3.2a33 33 0 0 0 8.5 3.5l3.1 8.3h13l3.1-8.3a33 33 0 0 0 8.5-3.5l8.7 3.2 9.2-9.2-3.2-8.7a33 33 0 0 0 3.5-8.5l8.3-3.1v-13l-8.3-3.1a33 33 0 0 0-3.5-8.5l3.2-8.7-9.2-9.2-8.7 3.2a33 33 0 0 0-8.5-3.5L56.7 5.8h-13z"/>
+  </svg>
+</div>
 
-  <p class="prompt">
-    <strong>Thanks for scanning!</strong><br>
-    Tap each button below to connect with us on all platforms:
-  </p>
+<!-- ══════════════════════════════════════
+     SCREEN 1 — Collect contact info
+══════════════════════════════════════ -->
+<div class="screen active" id="screen-form">
+  <div class="logo">⚙ Vishwakarma Engineering Works</div>
 
-  <div class="actions">
-    <a class="btn btn-yt" href="https://youtube.com/@vishwakarmaengineeringwork6215?si=fzXWjPSzyW8B4QO3" target="_blank" rel="noopener" id="yt-btn">
-      <div class="btn-icon">▶</div>
-      <div class="btn-label">Subscribe on YouTube<span>@vishwakarmaengineeringwork6215</span></div>
-    </a>
-    <a class="btn btn-fb" href="https://www.facebook.com/share/1JCzp7sddz/" target="_blank" rel="noopener" id="fb-btn">
-      <div class="btn-icon">f</div>
-      <div class="btn-label">Follow on Facebook<span>Vishwakarma Engineering Work</span></div>
-    </a>
-    <a class="btn btn-wa" href="https://wa.me/919044307455?text=Hi%20Vishwakarma%20Engineering%20Work!%20I%20scanned%20your%20QR%20code%20and%20would%20like%20to%20connect." target="_blank" rel="noopener" id="wa-btn">
-      <div class="btn-icon">💬</div>
-      <div class="btn-label">Save on WhatsApp<span>+91 90443 07455</span></div>
-    </a>
+  <h1 class="form-title">Stay <em>Connected</em></h1>
+  <p class="form-sub">Enter your details to connect with us instantly on YouTube, Facebook &amp; WhatsApp</p>
+
+  <div class="form-card">
+    <div class="field">
+      <label>Your Name</label>
+      <input type="text" id="inp-name" placeholder="e.g. Rahul Sharma" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label>WhatsApp Number</label>
+      <input type="tel" id="inp-phone" placeholder="e.g. 9876543210" autocomplete="tel" inputmode="numeric" maxlength="15" />
+    </div>
   </div>
 
-  <div class="auto-note">
-    ⚡ <strong>Tip:</strong> Tap each button above to subscribe on YouTube, follow on Facebook, and add our WhatsApp number — all in one go!
+  <button class="submit-btn" onclick="startConnect()">
+    ⚡ Connect on All Platforms
+  </button>
+
+  <br>
+  <p class="privacy-note">Your info is shared only with Vishwakarma Engineering Works via WhatsApp.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — Auto-opening platforms
+══════════════════════════════════════ -->
+<div class="screen" id="screen-loading">
+  <div class="logo">⚙ Opening Your Platforms</div>
+  <h2 class="loading-title">Connecting <em style="color:var(--gold)">You</em> Now</h2>
+  <p class="loading-sub">Each platform is opening — tap to confirm where needed</p>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="step-list">
+    <div class="step-item" id="step-yt">
+      <div class="step-dot s-yt">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5V8.5l6.5 3.5-6.5 3.5z"/></svg>
+      </div>
+      <div class="step-info">
+        <strong>YouTube</strong>
+        <span>Opening your channel…</span>
+      </div>
+      <div class="step-status status-wait" id="status-yt">○</div>
+    </div>
+
+    <div class="step-item" id="step-fb">
+      <div class="step-dot s-fb">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </div>
+      <div class="step-info">
+        <strong>Facebook</strong>
+        <span>Opening your page…</span>
+      </div>
+      <div class="step-status status-wait" id="status-fb">○</div>
+    </div>
+
+    <div class="step-item" id="step-wa">
+      <div class="step-dot s-wa">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.76.96-.93 1.16-.17.2-.34.22-.64.07a8.06 8.06 0 0 1-2.37-1.46 8.9 8.9 0 0 1-1.64-2.04c-.17-.3-.02-.46.13-.6.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.91-2.2-.24-.57-.48-.5-.67-.5-.17-.01-.37-.01-.57-.01s-.52.07-.79.37c-.27.3-1.03 1-1.03 2.44s1.05 2.83 1.2 3.03c.14.2 2.07 3.16 5.02 4.43a17 17 0 0 0 1.67.62c.7.22 1.34.19 1.84.12.56-.09 1.75-.72 2-1.41.24-.7.24-1.29.17-1.41-.07-.12-.27-.19-.57-.34zM12.05 21.8h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.38a9.86 9.86 0 0 1-1.51-5.27C2.16 6.6 6.64 2.14 12.06 2.14a9.8 9.8 0 0 1 6.97 2.89 9.77 9.77 0 0 1 2.88 6.96c0 5.43-4.48 9.81-9.86 9.81zm8.4-18.2A11.82 11.82 0 0 0 12.04 0C5.43 0 .07 5.34.06 11.9a11.84 11.84 0 0 0 1.59 5.96L0 24l6.3-1.65a11.9 11.9 0 0 0 5.72 1.46h.01c6.6 0 11.97-5.34 11.97-11.9 0-3.18-1.24-6.17-3.55-8.41z"/></svg>
+      </div>
+      <div class="step-info">
+        <strong>WhatsApp</strong>
+        <span>Sending your info to owner…</span>
+      </div>
+      <div class="step-status status-wait" id="status-wa">○</div>
+    </div>
+  </div>
+
+  <!-- Manual tap fallback -->
+  <div style="width:100%">
+    <p class="manual-title">If any didn't open — tap below</p>
+    <div class="manual-links">
+      <a class="manual-link ml-yt" id="link-yt" href="#" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5V8.5l6.5 3.5-6.5 3.5z"/></svg>
+        Open YouTube →
+      </a>
+      <a class="manual-link ml-fb" id="link-fb" href="#" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+        Open Facebook →
+      </a>
+      <a class="manual-link ml-wa" id="link-wa" href="#" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.76.96-.93 1.16-.17.2-.34.22-.64.07a8.06 8.06 0 0 1-2.37-1.46 8.9 8.9 0 0 1-1.64-2.04c-.17-.3-.02-.46.13-.6.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.91-2.2-.24-.57-.48-.5-.67-.5-.17-.01-.37-.01-.57-.01s-.52.07-.79.37c-.27.3-1.03 1-1.03 2.44s1.05 2.83 1.2 3.03c.14.2 2.07 3.16 5.02 4.43a17 17 0 0 0 1.67.62c.7.22 1.34.19 1.84.12.56-.09 1.75-.72 2-1.41.24-.7.24-1.29.17-1.41-.07-.12-.27-.19-.57-.34zM12.05 21.8h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.38a9.86 9.86 0 0 1-1.51-5.27C2.16 6.6 6.64 2.14 12.06 2.14a9.8 9.8 0 0 1 6.97 2.89 9.77 9.77 0 0 1 2.88 6.96c0 5.43-4.48 9.81-9.86 9.81zm8.4-18.2A11.82 11.82 0 0 0 12.04 0C5.43 0 .07 5.34.06 11.9a11.84 11.84 0 0 0 1.59 5.96L0 24l6.3-1.65a11.9 11.9 0 0 0 5.72 1.46h.01c6.6 0 11.97-5.34 11.97-11.9 0-3.18-1.24-6.17-3.55-8.41z"/></svg>
+        Open WhatsApp →
+      </a>
+    </div>
   </div>
 </div>
 
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — Done
+══════════════════════════════════════ -->
+<div class="screen" id="screen-done">
+  <div class="done-icon">🎉</div>
+  <h2 class="done-title">You're Connected!</h2>
+  <p class="done-sub">Thank you for joining Vishwakarma Engineering Works. Your details have been sent to us on WhatsApp.</p>
+
+  <div class="done-checklist">
+    <div class="check-row"><span class="ck">✦</span> Subscribed to YouTube channel</div>
+    <div class="check-row"><span class="ck">✦</span> Following Facebook page</div>
+    <div class="check-row"><span class="ck">✦</span> Contact shared on WhatsApp</div>
+  </div>
+
+  <button class="back-btn" onclick="restart()">← Go back</button>
+</div>
+
+
 <script>
-  // Track clicks and show done badges
-  ['yt-btn','fb-btn','wa-btn'].forEach(id => {
-    document.getElementById(id)?.addEventListener('click', function() {
-      this.style.opacity = '0.7';
-      setTimeout(() => this.style.opacity = '1', 600);
-    });
-  });
+  const YT_URL = "https://youtube.com/@vishwakarmaengineeringwork6215?si=fzXWjPSzyW8B4QO3";
+  const FB_URL = "https://www.facebook.com/share/1JCzp7sddz/";
+  const MY_WHATSAPP = "919044307455";
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startConnect() {
+    const name  = document.getElementById('inp-name').value.trim();
+    const phone = document.getElementById('inp-phone').value.trim().replace(/\D/g,'');
+
+    if (!name) {
+      document.getElementById('inp-name').focus();
+      document.getElementById('inp-name').style.borderColor = '#e8a100';
+      return;
+    }
+    if (!phone || phone.length < 7) {
+      document.getElementById('inp-phone').focus();
+      document.getElementById('inp-phone').style.borderColor = '#e8a100';
+      return;
+    }
+
+    // Build WhatsApp message you receive
+    const waMsg = encodeURIComponent(
+      `🙏 New Connection from QR Scan!\n\n` +
+      `👤 Name: ${name}\n` +
+      `📞 WhatsApp: +${phone.startsWith('91') ? phone : '91' + phone}\n\n` +
+      `✅ They have visited your page and connected on YouTube & Facebook.`
+    );
+    const WA_URL = `https://wa.me/${MY_WHATSAPP}?text=${waMsg}`;
+
+    // Set manual fallback links
+    document.getElementById('link-yt').href = YT_URL;
+    document.getElementById('link-fb').href = FB_URL;
+    document.getElementById('link-wa').href = WA_URL;
+
+    show('screen-loading');
+
+    // ── Step 1: YouTube (immediate)
+    setStatus('yt', 'active');
+    setProgress(10);
+    setTimeout(() => {
+      window.open(YT_URL, '_blank');
+      setStatus('yt', 'done');
+      setProgress(40);
+
+      // ── Step 2: Facebook (1.5s later)
+      setTimeout(() => {
+        setStatus('fb', 'active');
+        setTimeout(() => {
+          window.open(FB_URL, '_blank');
+          setStatus('fb', 'done');
+          setProgress(70);
+
+          // ── Step 3: WhatsApp (3s later)
+          setTimeout(() => {
+            setStatus('wa', 'active');
+            setTimeout(() => {
+              window.open(WA_URL, '_blank');
+              setStatus('wa', 'done');
+              setProgress(100);
+
+              // ── Show done screen
+              setTimeout(() => show('screen-done'), 1200);
+            }, 600);
+          }, 1500);
+        }, 600);
+      }, 1500);
+    }, 800);
+  }
+
+  function setStatus(id, state) {
+    const el   = document.getElementById('status-' + id);
+    const item = document.getElementById('step-' + id);
+    el.className = 'step-status';
+    item.classList.remove('done','active-now');
+    if (state === 'active') {
+      el.className = 'step-status status-active';
+      el.textContent = '●';
+      item.classList.add('active-now');
+    } else if (state === 'done') {
+      el.className = 'step-status status-done';
+      el.textContent = '✦';
+      item.classList.add('done');
+    } else {
+      el.textContent = '○';
+    }
+  }
+
+  function setProgress(pct) {
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }
+
+  function restart() {
+    document.getElementById('inp-name').value = '';
+    document.getElementById('inp-phone').value = '';
+    setProgress(0);
+    ['yt','fb','wa'].forEach(id => setStatus(id, 'wait'));
+    show('screen-form');
+  }
 </script>
 </body>
 </html>
